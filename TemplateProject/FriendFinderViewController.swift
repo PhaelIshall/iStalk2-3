@@ -99,10 +99,17 @@ class FriendFinderViewController: UIViewController, CLLocationManagerDelegate  {
     
     
     override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        state = .DefaultMode
-        checkUsers()
-        self.tableView.addSubview(self.refreshControl)
+        if Reachability.isConnectedToNetwork(){
+            super.viewDidAppear(animated)
+            state = .DefaultMode
+            checkUsers()
+            self.tableView.addSubview(self.refreshControl)
+
+        }
+        else{
+            var alert: UIAlertView = UIAlertView(title: "Internet failure", message: "Please try again later, we are unable to connect to the server.", delegate: nil, cancelButtonTitle: "Ok");
+            alert.show();
+        }
     }
     
     func checkUsers(){

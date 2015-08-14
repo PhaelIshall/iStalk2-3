@@ -93,9 +93,15 @@ class FriendPickerViewController: UIViewController, CLLocationManagerDelegate  {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        if Reachability.isConnectedToNetwork(){
+            
         state = .DefaultMode
         checkUsers()
-        self.tableView.addSubview(self.refreshControl)
+            self.tableView.addSubview(self.refreshControl)
+        }
+        else{
+            
+        }
     }
     
     func checkUsers(){

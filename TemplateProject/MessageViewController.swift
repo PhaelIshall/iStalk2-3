@@ -38,14 +38,21 @@ class MessageViewController: JSQMessagesViewController {
 
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        navigationController?.navigationBar.topItem?.title = "Back"
-        self.inputToolbar.contentView.leftBarButtonItem = nil
+        if Reachability.isConnectedToNetwork(){
+            super.viewDidLoad()
+            navigationController?.navigationBar.topItem?.title = "Back"
+            self.inputToolbar.contentView.leftBarButtonItem = nil
+            
+            
+            self.automaticallyScrollsToMostRecentMessage = true
+            senderDisplayName = User.currentUser()!.username
+            senderId = User.currentUser()!.objectId
+        }
+        else{
+            var alert: UIAlertView = UIAlertView(title: "Internet failure", message: "Please try again later, we are unable to connect to the server.", delegate: nil, cancelButtonTitle: "Ok");
+            alert.show();
+        }
         
-        
-         self.automaticallyScrollsToMostRecentMessage = true
-        senderDisplayName = User.currentUser()!.username
-        senderId = User.currentUser()!.objectId
     }
     func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
         var viewRegion = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 1900, 1900);

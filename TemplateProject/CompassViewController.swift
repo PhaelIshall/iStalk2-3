@@ -93,23 +93,24 @@ class CompassViewController: UIViewController, UITableViewDelegate, MKMapViewDel
     var nearbySelected: Bool = false
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        mapView.alpha = 1
-        arrowImageView.removeFromSuperview()
-        self.view.addSubview(arrowImageView)
-        mapView.showsUserLocation = true;
-//
-//        var zoomLocation: CLLocationCoordinate2D = CLLocationCoordinate2D()
-//        zoomLocation.latitude = User.currentUser()!.Coordinate.latitude
-//        zoomLocation.longitude = User.currentUser()!.Coordinate.longitude
-        
-        mapView.delegate = self;
-        var press: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: "action:")
-        
-        press.minimumPressDuration = 0.25
-        mapView.addGestureRecognizer(press)
-        if(nearbySelected){
-            if let parseUser = self.parseUser {
+        if Reachability.isConnectedToNetwork(){
+            super.viewDidLoad()
+            mapView.alpha = 1
+            arrowImageView.removeFromSuperview()
+            self.view.addSubview(arrowImageView)
+            mapView.showsUserLocation = true;
+            //
+            //        var zoomLocation: CLLocationCoordinate2D = CLLocationCoordinate2D()
+            //        zoomLocation.latitude = User.currentUser()!.Coordinate.latitude
+            //        zoomLocation.longitude = User.currentUser()!.Coordinate.longitude
+            
+            mapView.delegate = self;
+            var press: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: "action:")
+            
+            press.minimumPressDuration = 0.09
+            mapView.addGestureRecognizer(press)
+            if(nearbySelected){
+                if let parseUser = self.parseUser {
                     let updatedFriend = parseUser
                     self.parseUser?.Coordinate = updatedFriend.Coordinate
                     
@@ -123,20 +124,18 @@ class CompassViewController: UIViewController, UITableViewDelegate, MKMapViewDel
                     point.coordinate = CLLocationCoordinate2DMake(parseUser.Coordinate.latitude, parseUser.Coordinate.longitude)
                     point.imageName = "man13-2.png"
                     self.mapView.addAnnotation(point)
-               
-                user.coordinate = CLLocationCoordinate2DMake(User.currentUser()!.Coordinate!.latitude, User.currentUser()!.Coordinate!.longitude)
-         
-                self.mapView.addAnnotation(user)
+                    
+                    user.coordinate = CLLocationCoordinate2DMake(User.currentUser()!.Coordinate!.latitude, User.currentUser()!.Coordinate!.longitude)
+                    
+                    self.mapView.addAnnotation(user)
                     mapView.showAnnotations(mapView.annotations, animated: true)
-                
-                //mapView.camera.altitude *= 1.4;
-
-//                   var viewRegion = MKCoordinateRegionMakeWithDistance(point.coordinate, self.d!, self.d!);
-//                    var adjustedRegion = mapView.regionThatFits(viewRegion)
-//                
-//                    mapView.setRegion(adjustedRegion, animated: true);
-                 mapView.selectAnnotation(point, animated: true)
+                    mapView.selectAnnotation(point, animated: true)
                 }
+            }
+        }
+        else{
+            var alert: UIAlertView = UIAlertView(title: "Internet failure", message: "Please try again later, we are unable to connect to the server.", delegate: nil, cancelButtonTitle: "Ok");
+            alert.show();
         }
     }
     
@@ -146,7 +145,8 @@ class CompassViewController: UIViewController, UITableViewDelegate, MKMapViewDel
     }
     
      var point = PersonAnnotation()
-    
+    var touchMapCoordinate : CLLocationCoordinate2D?
+
     func action (rec: UILongPressGestureRecognizer){
         if rec.state == .Ended {
             let annotationsToRemove = mapView.annotations.filter { $0 !== self.mapView.userLocation && $0 !== self.point}
@@ -175,11 +175,13 @@ class CompassViewController: UIViewController, UITableViewDelegate, MKMapViewDel
                     sub += ", " + city
                 }
                 pa.subtitle = sub
+                self.address = sub
             })
 
         }
             
     }
+    var address: String?
 
     var selectedLocation: CLLocationCoordinate2D?
    
@@ -248,14 +250,56 @@ class CompassViewController: UIViewController, UITableViewDelegate, MKMapViewDel
        
         var annotationView : MKAnnotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "loc")
         
-        let detailButton: UIButton = UIButton.buttonWithType(UIButtonType.DetailDisclosure) as! UIButton
-        detailButton.tintColor = UIColor.blackColor()
-        annotationView.rightCalloutAccessoryView = detailButton
-       annotationView.canShowCallout = true
         
+        annotationView.draggable = true
+        annotationView.canShowCallout = true
+        
+        
+        
+        let deleteButton = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
+        deleteButton.frame.size.width = 44
+        deleteButton.frame.size.height = 44
+        deleteButton.backgroundColor = UIColor.clearColor()
+        deleteButton.setImage(UIImage(named: "send12-3.png"), forState: .Normal)
+        
+        annotationView.rightCalloutAccessoryView = deleteButton
+        
+
         return annotationView
     }
-
+    func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
+        var rec : UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "actions:")
+        mapView.addGestureRecognizer(rec)
+    }
+    
+    func actions(gest: UITapGestureRecognizer){
+        
+        let alertController = UIAlertController(title: "Send request", message: "Would you like to send a request to meet \(self.parseUser!.username!)?", preferredStyle: .Alert)
+        
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        alertController.addTextFieldWithConfigurationHandler({(textField: UITextField!) in
+            textField.placeholder = "Time of meeting and comments"
+            
+            NSNotificationCenter.defaultCenter().addObserverForName(UITextFieldTextDidChangeNotification, object: textField, queue: NSOperationQueue.mainQueue()) { (notification) in
+                self.message = textField.text
+            }
+        })
+        
+        let sendRequestActionHandler = { (action:UIAlertAction!) -> Void in
+            self.selectedLocation = self.touchMapCoordinate
+            self.sendRequest(self.parseUser)
+            let alertMessage = UIAlertController(title: "Request sent", message: "Meeting in \(self.address!)", preferredStyle: .Alert)
+            
+            alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+            self.presentViewController(alertMessage, animated: true, completion: nil)
+        }
+        
+        let requestAction = UIAlertAction(title: "Send request", style: .Default, handler: sendRequestActionHandler)
+        alertController.addAction(requestAction)
+        self.presentViewController(alertController, animated: true, completion: nil)
+        
+    }
+    
     func getDirection(){
         
         var alert: UIAlertView = UIAlertView(title: "Getting directions", message: "Please wait, this will take a few seconds...", delegate: nil, cancelButtonTitle: "Cancel");

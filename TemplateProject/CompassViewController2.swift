@@ -68,22 +68,22 @@ class CompassViewController2: UIViewController, UITableViewDelegate, MKMapViewDe
     var nearbySelected: Bool = false
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        mapView.alpha = 1
-        arrowImageView.removeFromSuperview()
-        self.view.addSubview(arrowImageView)
-        mapView.showsUserLocation = true;
-        
-        
-       
-        
-        //POPUP WINDOW WITH THE REQUEST UIALERTCONTROLLER
-        
-        
-        var press: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: "action:")
-        
-        press.minimumPressDuration = 0.25
-        mapView.addGestureRecognizer(press)
+        if Reachability.isConnectedToNetwork(){
+            super.viewDidLoad()
+            mapView.alpha = 1
+            arrowImageView.removeFromSuperview()
+            self.view.addSubview(arrowImageView)
+            mapView.showsUserLocation = true;
+            var press: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: "action:")
+            
+            press.minimumPressDuration = 0.25
+            mapView.addGestureRecognizer(press)
+
+        }
+        else{
+            var alert: UIAlertView = UIAlertView(title: "Internet failure", message: "Please try again later, we are unable to connect to the server.", delegate: nil, cancelButtonTitle: "Ok");
+            alert.show();
+        }
         
     }
     

@@ -31,9 +31,15 @@ class NotificationViewController: UIViewController{
 
     var allRequests: [MeetingRequest] = []
     override func viewDidLoad() {
+        if Reachability.isConnectedToNetwork(){
         super.viewDidLoad()
             getNotifications()
         self.tableView.addSubview(self.refreshControl)
+        }
+        else{
+            var alert: UIAlertView = UIAlertView(title: "Internet failure", message: "Please try again later, we are unable to connect to the server.", delegate: nil, cancelButtonTitle: "Ok");
+            alert.show();
+        }
     }
     
     override func  viewWillDisappear(animated: Bool) {

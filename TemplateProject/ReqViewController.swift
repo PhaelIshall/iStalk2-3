@@ -115,66 +115,73 @@ class ReqViewController: UIViewController, UITableViewDelegate, MKMapViewDelegat
     var location: CLLocationCoordinate2D?
         
     override func viewDidLoad() {
-        super.viewDidLoad()
-        if meetingRequest?.fromUser != User.currentUser(){
-            friendName.text = "\(friend!.username!) said: "
-
+        if Reachability.isConnectedToNetwork(){
+            super.viewDidLoad()
+            if meetingRequest?.fromUser == User.currentUser(){
+                friendName.text = "\(friend!.username!) said: "
+                
+            }
+            else{
+                friendName.text = "You said: "
+            }
+            msg.text = txt
+            mapView.alpha = 1
+            self.view.bringSubviewToFront(arrowImageView)
+            
+            mapView.showsUserLocation = true;
+            var point = PersonAnnotation()
+            point.title = friend!.username
+            point.coordinate = CLLocationCoordinate2DMake(friend!.Coordinate.latitude, friend!.Coordinate.longitude)
+            
+            self.compass.arrowImageView = self.arrowImageView
+            self.compass.latitudeOfTargetedPoint = self.friend!.Coordinate.latitude
+            self.compass.longitudeOfTargetedPoint = self.friend!.Coordinate.longitude
+            
+            var selectedLocation = MKPointAnnotation()
+            
+            selectedLocation.title = "Your friend selected this location"
+            
+            selectedLocation.coordinate = self.location!
+            let geoCoder = CLGeocoder()
+            let location = CLLocation(latitude: selectedLocation.coordinate.latitude, longitude: selectedLocation.coordinate.longitude)
+            
+            geoCoder.reverseGeocodeLocation(location, completionHandler: { (placemarks, error) -> Void in
+                let placeArray = placemarks as? [CLPlacemark]
+                var placeMark: CLPlacemark!
+                placeMark = placeArray?[0]
+                var sub: String = ""
+                if let locationName = placeMark.addressDictionary["Name"] as? String {
+                    sub += locationName
+                }
+                if let city = placeMark.addressDictionary["City"] as? String {
+                    sub += ", " + city
+                }
+                selectedLocation.subtitle = sub
+            })
+            
+            self.mapView.addAnnotation(selectedLocation)
+            self.mapView.addAnnotation(point)
+            
+            user.coordinate = CLLocationCoordinate2DMake(User.currentUser()!.Coordinate!.latitude, User.currentUser()!.Coordinate!.longitude)
+            user.imageName = "man13-2.png"                                                          //PERSON ANNOTATION
+            self.mapView.addAnnotation(user)
+            mapView.showAnnotations(mapView.annotations, animated: true)
+            mapView.selectAnnotation(point, animated: true)
+            
+            
+            
+            var place = PFGeoPoint()
+            place.latitude = self.location!.latitude
+            place.longitude = self.location!.longitude
+            
+            var dist = User.currentUser()!.Coordinate.distanceInKilometersTo(place);
+            self.title = String(format:"%.1f", dist) + "km from destination"
         }
         else{
-            friendName.text = "You said: "
+            var alert: UIAlertView = UIAlertView(title: "Internet failure", message: "Please try again later, we are unable to connect to the server.", delegate: nil, cancelButtonTitle: "Ok");
+            alert.show();
         }
-        msg.text = txt
-        mapView.alpha = 1
-        self.view.bringSubviewToFront(arrowImageView)
         
-        mapView.showsUserLocation = true;
-        var point = PersonAnnotation()
-        point.title = friend!.username
-        point.coordinate = CLLocationCoordinate2DMake(friend!.Coordinate.latitude, friend!.Coordinate.longitude)
-        
-        self.compass.arrowImageView = self.arrowImageView
-        self.compass.latitudeOfTargetedPoint = self.friend!.Coordinate.latitude
-        self.compass.longitudeOfTargetedPoint = self.friend!.Coordinate.longitude
-        
-        var selectedLocation = MKPointAnnotation()
-
-        selectedLocation.title = "Your friend selected this location"
-      
-        selectedLocation.coordinate = self.location!
-        let geoCoder = CLGeocoder()
-        let location = CLLocation(latitude: selectedLocation.coordinate.latitude, longitude: selectedLocation.coordinate.longitude)
-        
-        geoCoder.reverseGeocodeLocation(location, completionHandler: { (placemarks, error) -> Void in
-            let placeArray = placemarks as? [CLPlacemark]
-            var placeMark: CLPlacemark!
-            placeMark = placeArray?[0]
-            var sub: String = ""
-            if let locationName = placeMark.addressDictionary["Name"] as? String {
-                sub += locationName
-            }
-            if let city = placeMark.addressDictionary["City"] as? String {
-                sub += ", " + city
-            }
-            selectedLocation.subtitle = sub
-        })
-
-        self.mapView.addAnnotation(selectedLocation)
-        self.mapView.addAnnotation(point)
-        
-        user.coordinate = CLLocationCoordinate2DMake(User.currentUser()!.Coordinate!.latitude, User.currentUser()!.Coordinate!.longitude)
-        user.imageName = "man13-2.png"                                                          //PERSON ANNOTATION
-        self.mapView.addAnnotation(user)
-        mapView.showAnnotations(mapView.annotations, animated: true)
-        mapView.selectAnnotation(point, animated: true)
-
-        
-        
-        var place = PFGeoPoint()
-        place.latitude = self.location!.latitude
-        place.longitude = self.location!.longitude
-        
-        var dist = User.currentUser()!.Coordinate.distanceInKilometersTo(place);
-        self.title = String(format:"%.1f", dist) + "km from destination"
     }
     
     override func didReceiveMemoryWarning() {
