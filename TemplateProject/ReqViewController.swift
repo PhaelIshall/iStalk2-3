@@ -30,16 +30,16 @@ class ReqViewController: UIViewController, UITableViewDelegate, MKMapViewDelegat
     @IBAction func acceptPressed(sender: AnyObject){
         self.meetingRequest!.setObject("Accepted", forKey: "request")
         self.meetingRequest!.save()
-        accept?.hidden
-        decline?.hidden
+        accept?.removeFromSuperview()
+        decline?.removeFromSuperview()
     }
     
     
     @IBAction func declinePressed(sender: AnyObject){
         self.meetingRequest!.setObject("Denied", forKey: "request")
         self.meetingRequest!.save()
-        accept?.hidden
-        decline?.hidden
+        accept?.removeFromSuperview()
+        decline?.removeFromSuperview()
     }
     
     @IBOutlet weak var expand: UIBarButtonItem!
@@ -61,9 +61,7 @@ class ReqViewController: UIViewController, UITableViewDelegate, MKMapViewDelegat
         if (!down){
             view.frame = CGRectMake( 0, toolBar.frame.minY - view.frame.height, view.frame.size.width , view.frame.size.height );
             down = true
-            
-            println(meetingRequest)
-            println(meetingRequest?.status)
+
             if (meetingRequest?.status == "Accepted"){
                 if meetingRequest?.toUser.objectId == User.currentUser()?.objectId{
                     var alert: UIAlertView = UIAlertView(title: "Details", message: "You have accepted the request", delegate: nil, cancelButtonTitle: "OK");
@@ -76,7 +74,6 @@ class ReqViewController: UIViewController, UITableViewDelegate, MKMapViewDelegat
             }
             else if (meetingRequest?.status == "Denied"){
 
-                println(meetingRequest?.message)
                 if meetingRequest?.toUser.objectId == User.currentUser()?.objectId{
                     var alert: UIAlertView = UIAlertView(title: "Details", message: "You have declined the request", delegate: nil, cancelButtonTitle: "OK");
                     alert.show()
@@ -117,7 +114,7 @@ class ReqViewController: UIViewController, UITableViewDelegate, MKMapViewDelegat
     override func viewDidLoad() {
         if Reachability.isConnectedToNetwork(){
             super.viewDidLoad()
-            if meetingRequest?.fromUser == User.currentUser(){
+            if meetingRequest?.fromUser.objectId == User.currentUser()?.objectId{
                 friendName.text = "\(friend!.username!) said: "
                 
             }
@@ -261,10 +258,16 @@ class ReqViewController: UIViewController, UITableViewDelegate, MKMapViewDelegat
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if (segue.identifier == "openMessages") {
+        if (segue.identifier == "openMessage") {
         let messageViewController = segue.destinationViewController as! MessageViewController
         messageViewController.friend = friend
         }
+    }
+    
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        self.performSegueWithIdentifier("openMessages", sender: self)
+   
     }
     
     func showRoute(response: MKDirectionsResponse) {

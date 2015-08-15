@@ -290,11 +290,7 @@ extension FriendPickerViewController: UITableViewDataSource, UITableViewDelegate
     
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        if (segue.identifier == "showFirstVC") {
-//            let s = segue.destinationViewController as! FirstViewController
-//            s.touchMapCoordinate = selectedLocation
-//           
-//        }
+
         if (segue.identifier == "sendRequest") {
             let friendReq = segue.destinationViewController as! CompassViewController2
             friendReq.selectedLocation = selectedLocation

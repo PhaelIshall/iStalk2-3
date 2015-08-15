@@ -98,11 +98,10 @@ class CompassViewController2: UIViewController, UITableViewDelegate, MKMapViewDe
         self.d = User.currentUser()?.Coordinate.distanceInKilometersTo(self.parseUser?.Coordinate!);
         self.title = String(format:"%.1f", d!) + "km away"
         
-        
-        println(parseUser.username)
+
         point.title = parseUser.username
         point.coordinate = CLLocationCoordinate2DMake(parseUser.Coordinate.latitude, parseUser.Coordinate.longitude)
-        println(mapView)
+      
         self.mapView.addAnnotation(point)
         mapView.selectAnnotation(point, animated: true)
         user.coordinate = CLLocationCoordinate2DMake(User.currentUser()!.Coordinate!.latitude, User.currentUser()!.Coordinate!.longitude)
@@ -202,6 +201,7 @@ class CompassViewController2: UIViewController, UITableViewDelegate, MKMapViewDe
         
         let sendRequestActionHandler = { (action:UIAlertAction!) -> Void in
             self.selectedLocation = view.annotation.coordinate
+           
             self.sendRequest(self.parseUser)
             let alertMessage = UIAlertController(title: "Request sent", message: "Meeting in \(view.annotation.subtitle!)", preferredStyle: .Alert)
             
@@ -216,10 +216,10 @@ class CompassViewController2: UIViewController, UITableViewDelegate, MKMapViewDe
         
     }
     
-    var message: String?
+    var message: String = ""
     func sendRequest(toUser: User?){
         let geoPoint = PFGeoPoint(latitude: selectedLocation!.latitude, longitude: selectedLocation!.longitude)
-        let params = ["userId" : parseUser!.objectId!,  "location" : geoPoint, "message" : message!, "status": "pending", "read": "false"]
+        let params = ["userId" : parseUser!.objectId!,  "location" : geoPoint, "message" : message, "status": "pending", "read": "false"]
         PFCloud.callFunctionInBackground("sendRequest", withParameters: params) { (request, error) -> Void in
             
             if let error = error {
@@ -252,10 +252,13 @@ class CompassViewController2: UIViewController, UITableViewDelegate, MKMapViewDe
         }
         var annotationView : MKAnnotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "loc")
         
-        let detailButton: UIButton = UIButton.buttonWithType(UIButtonType.DetailDisclosure) as! UIButton
-        detailButton.tintColor = UIColor.blackColor()
-        annotationView.rightCalloutAccessoryView = detailButton
-        annotationView.canShowCallout = true
+        let deleteButton = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
+        deleteButton.frame.size.width = 44
+        deleteButton.frame.size.height = 44
+        deleteButton.backgroundColor = UIColor.clearColor()
+        deleteButton.setImage(UIImage(named: "send12-3.png"), forState: .Normal)
+        
+        annotationView.rightCalloutAccessoryView = deleteButton
         
         return annotationView
     }
@@ -340,16 +343,15 @@ class CompassViewController2: UIViewController, UITableViewDelegate, MKMapViewDe
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
-        if (segue.identifier == "openMessages") {
+        if (segue.identifier == "openMess") {
             let messageViewController = segue.destinationViewController as! MessageViewController
             messageViewController.friend = parseUser
         }
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        self.performSegueWithIdentifier("startGame", sender: self)
-        self.performSegueWithIdentifier("openMessages", sender: self)
-        self.performSegueWithIdentifier("openMap", sender: self)
+        self.performSegueWithIdentifier("openMess", sender: self)
+       
     }
     
     

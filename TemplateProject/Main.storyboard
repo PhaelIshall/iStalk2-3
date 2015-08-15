@@ -352,7 +352,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jre-WV-lEB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1792" y="483"/>
+            <point key="canvasLocation" x="1616" y="655"/>
         </scene>
         <!--Compass View Controller-->
         <scene sceneID="WkL-zU-nWl">
@@ -539,7 +539,7 @@
                                     <barButtonItem image="envelope48-2.png" id="yEW-yl-89F">
                                         <color key="tintColor" red="0.16102855190000001" green="0.72544456869999996" blue="0.63643313189999995" alpha="0.60999999999999999" colorSpace="calibratedRGB"/>
                                         <connections>
-                                            <segue destination="akb-Ei-exk" kind="show" identifier="openMessages" id="qDw-fB-zJz"/>
+                                            <segue destination="akb-Ei-exk" kind="show" identifier="openMessage" id="qDw-fB-zJz"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="gg0-41-56E"/>
@@ -625,26 +625,14 @@
                             <constraint firstAttribute="trailing" secondItem="b6k-eH-yh1" secondAttribute="trailing" id="Paq-gj-5A6"/>
                             <constraint firstItem="LEO-JP-eek" firstAttribute="leading" secondItem="wXR-LD-n0r" secondAttribute="leadingMargin" constant="-10" id="S95-9s-64y"/>
                             <constraint firstItem="LEO-JP-eek" firstAttribute="top" secondItem="b6k-eH-yh1" secondAttribute="top" id="UxA-Vv-WiH"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="HvM-8D-tG8" secondAttribute="bottom" constant="5" id="bNm-gH-gDr"/>
-                            <constraint firstAttribute="centerX" secondItem="LEO-JP-eek" secondAttribute="centerX" id="bar-bO-umW"/>
                             <constraint firstItem="HvM-8D-tG8" firstAttribute="trailing" secondItem="b6k-eH-yh1" secondAttribute="trailing" id="dNa-HA-amb"/>
                             <constraint firstItem="b6k-eH-yh1" firstAttribute="leading" secondItem="HvM-8D-tG8" secondAttribute="leading" id="eB6-1u-Byj"/>
                             <constraint firstItem="2OM-SF-coT" firstAttribute="trailing" secondItem="wXR-LD-n0r" secondAttribute="trailingMargin" constant="16" id="guA-BK-Hqp"/>
                             <constraint firstItem="b6k-eH-yh1" firstAttribute="top" secondItem="fgN-5W-Cgl" secondAttribute="bottom" id="hx7-pG-AcF"/>
                             <constraint firstAttribute="bottomMargin" secondItem="2OM-SF-coT" secondAttribute="bottom" constant="-63" id="lrf-12-GYe"/>
                             <constraint firstItem="2OM-SF-coT" firstAttribute="top" secondItem="dpi-7x-alf" secondAttribute="top" id="pMr-7N-caZ"/>
-                            <constraint firstAttribute="centerY" secondItem="LEO-JP-eek" secondAttribute="centerY" constant="40" id="qxA-Dg-O1D"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="LEO-JP-eek" secondAttribute="trailing" constant="184" id="v5Q-j9-pf5"/>
                             <constraint firstItem="b6k-eH-yh1" firstAttribute="leading" secondItem="wXR-LD-n0r" secondAttribute="leading" id="yjp-rY-4lX"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="bar-bO-umW"/>
-                                <exclude reference="qxA-Dg-O1D"/>
-                                <exclude reference="v5Q-j9-pf5"/>
-                                <exclude reference="bNm-gH-gDr"/>
-                            </mask>
-                        </variation>
                     </view>
                     <navigationItem key="navigationItem" id="0JM-85-KnI">
                         <barButtonItem key="rightBarButtonItem" image="right arrows17.png" id="6Vr-vU-MqQ">
@@ -690,7 +678,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dLc-a5-9fN">
                                 <rect key="frame" x="0.0" y="64" width="600" height="35"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hold anywhere on the map to create a pin and select a destination or a place to meet your friend!" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GxX-mW-1Wm">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hold anywhere on the map to create a pin and select a place to meet your friend!" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GxX-mW-1Wm">
                                         <rect key="frame" x="40" y="10" width="520" height="15"/>
                                         <fontDescription key="fontDescription" name="TimesNewRomanPSMT" family="Times New Roman" pointSize="13"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -990,11 +978,14 @@
                                 </constraints>
                             </imageView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mqJ-TE-aU0">
-                                <rect key="frame" x="0.0" y="561" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="561" width="584" height="44"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="AY9-fg-zEv"/>
                                     <barButtonItem image="envelope48-2.png" id="2eC-T2-ipH">
                                         <color key="tintColor" red="0.16102855190000001" green="0.72544456869999996" blue="0.63643313189999995" alpha="0.60999999999999999" colorSpace="calibratedRGB"/>
+                                        <connections>
+                                            <segue destination="akb-Ei-exk" kind="show" identifier="openMess" id="gca-eh-zMo"/>
+                                        </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="ReT-K6-Vad"/>
                                 </items>
@@ -1034,7 +1025,7 @@
                             <constraint firstAttribute="centerY" secondItem="af1-dQ-P9f" secondAttribute="centerY" constant="150" id="hEy-BA-E4c"/>
                             <constraint firstItem="mqJ-TE-aU0" firstAttribute="top" secondItem="Psn-dw-oyZ" secondAttribute="bottom" id="iAt-fP-DWM"/>
                             <constraint firstItem="Psn-dw-oyZ" firstAttribute="leading" secondItem="dDA-Qq-fFe" secondAttribute="trailing" constant="-600" id="izs-I8-hOm"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="mqJ-TE-aU0" secondAttribute="trailing" constant="-16" id="qbI-xu-aiP"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="mqJ-TE-aU0" secondAttribute="trailing" id="qbI-xu-aiP"/>
                             <constraint firstItem="dDA-Qq-fFe" firstAttribute="top" secondItem="JmD-Pg-xGN" secondAttribute="bottom" id="sSA-En-l7f"/>
                             <constraint firstAttribute="trailingMargin" secondItem="dDA-Qq-fFe" secondAttribute="trailing" constant="-16" id="t6b-Eq-0DR"/>
                             <constraint firstItem="Psn-dw-oyZ" firstAttribute="leading" secondItem="vWC-3U-f2Q" secondAttribute="leading" id="u5L-A2-EBB"/>
@@ -1043,6 +1034,7 @@
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="izs-I8-hOm"/>
                                 <exclude reference="hEy-BA-E4c"/>
                                 <exclude reference="uIl-8Z-sdA"/>
                                 <exclude reference="4eI-gg-18J"/>
@@ -1075,9 +1067,9 @@
         <image name="right arrows17.png" width="32" height="32"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="NXd-Vr-dZL"/>
         <segue reference="J4t-yJ-QQI"/>
-        <segue reference="fGR-Bd-n8c"/>
+        <segue reference="NXd-Vr-dZL"/>
+        <segue reference="gca-eh-zMo"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
 </document>

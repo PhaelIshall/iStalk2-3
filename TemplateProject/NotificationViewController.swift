@@ -80,7 +80,6 @@ class NotificationViewController: UIViewController{
                 for entry in req {
                     self.requestFetched = entry
                     self.allRequests.append(entry)
-                    println(entry)
                }
                 self.tableView.reloadData()
             }
@@ -118,6 +117,10 @@ extension NotificationViewController: UITableViewDataSource, UITableViewDelegate
             if (allRequests[indexPath.row].message != "" ){
                 cell.msg.text = "You said \(allRequests[indexPath.row].message)"
             }
+            else{
+                cell.msg.text = ""
+            }
+            
             if (selectedReq.read == "true"){
                 cell.backgroundColor = UIColor.whiteColor()
             }
@@ -139,6 +142,9 @@ extension NotificationViewController: UITableViewDataSource, UITableViewDelegate
             if (allRequests[indexPath.row].message != "" ){
                 cell.msg.text = "\(allRequests[indexPath.row].fromUser.username!) says \(allRequests[indexPath.row].message)"
             }
+            else{
+                cell.msg.text = ""
+            }
             if (selectedReq.read == "true"){
                 cell.backgroundColor = UIColor.whiteColor()
             }
@@ -156,33 +162,6 @@ extension NotificationViewController: UITableViewDataSource, UITableViewDelegate
         }
         return cell
     }
-    
-    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
-      
-        if tableView.cellForRowAtIndexPath(indexPath)?.reuseIdentifier == "notifCell" {
-            let accept = UITableViewRowAction(style: .Normal, title: "Accept") { action, index in
-                self.selectedReq!.setObject("Accepted", forKey: "request")
-                self.selectedReq!.save()
-                self.tableView.cellForRowAtIndexPath(indexPath)?.backgroundColor = UIColor.blueColor()
-            }
-            accept.backgroundColor = UIColor.greenColor()
-            
-            let decline = UITableViewRowAction(style: .Normal, title: "Decline") { action, index in
-                self.selectedReq!.setObject("Denied", forKey: "request")
-                self.selectedReq!.save()
-                var obj = PFObject(withoutDataWithClassName: "MeetingRequest", objectId: self.allRequests[indexPath.row].objectId)
-                obj.deleteEventually()
-                self.allRequests.removeAtIndex(indexPath.row)
-                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
-            }
-            decline.backgroundColor = UIColor.redColor()
-            return [accept, decline]
-        }
-        else{
-            return []
-        }
-    }
-    
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
     }

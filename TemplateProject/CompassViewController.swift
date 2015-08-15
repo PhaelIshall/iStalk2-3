@@ -153,9 +153,9 @@ class CompassViewController: UIViewController, UITableViewDelegate, MKMapViewDel
             mapView.removeAnnotations( annotationsToRemove )
             
             var touchPoint : CGPoint  =  rec.locationInView(mapView)
-            var touchMapCoordinate = mapView.convertPoint(touchPoint, toCoordinateFromView: mapView)
+             self.touchMapCoordinate = mapView.convertPoint(touchPoint, toCoordinateFromView: mapView)
             var pa = MKPointAnnotation()
-            pa.coordinate = touchMapCoordinate;
+            pa.coordinate = touchMapCoordinate!;
             var placemark = MKPlacemark(coordinate: pa.coordinate, addressDictionary: nil)
             pa.title = "Selected place";
             mapView.addAnnotation(pa)
@@ -214,10 +214,10 @@ class CompassViewController: UIViewController, UITableViewDelegate, MKMapViewDel
         
     }
     
-    var message: String?
+    var message: String = ""
     func sendRequest(toUser: User?){
         let geoPoint = PFGeoPoint(latitude: selectedLocation!.latitude, longitude: selectedLocation!.longitude)
-        let params = ["userId" : parseUser!.objectId!,  "location" : geoPoint, "message" : message!, "status": "pending", "read": "false"]
+        let params = ["userId" : parseUser!.objectId!,  "location" : geoPoint, "message" : message, "status": "pending", "read": "false"]
         PFCloud.callFunctionInBackground("sendRequest", withParameters: params) { (request, error) -> Void in
             
             if let error = error {
@@ -387,9 +387,7 @@ class CompassViewController: UIViewController, UITableViewDelegate, MKMapViewDel
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        self.performSegueWithIdentifier("startGame", sender: self)
         self.performSegueWithIdentifier("openMessages", sender: self)
-        self.performSegueWithIdentifier("openMap", sender: self)
     }
     
     
